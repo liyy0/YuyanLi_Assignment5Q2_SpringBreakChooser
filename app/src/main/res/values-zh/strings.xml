@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">作业5</string>
+    <string name="text">应用</string>
+    <string name="chinese">中文</string>
+    <string name="english">英文</string>
+    <string name="spanish">西班牙</string>
+    <string name="speech_prompt">say something</string>
+    <string name="speech_not_supported">Sorry</string>
+
+</resources>

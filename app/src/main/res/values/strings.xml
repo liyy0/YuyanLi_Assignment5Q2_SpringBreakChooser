@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">YuyanLi_Assignment5Q2_SpringBreakChooser</string>
+    <string name="text">App</string>
+    <string name="chinese">Chinese</string>
+    <string name="english">English</string>
+    <string name="spanish">Spanish</string>
+    <string name="speech_prompt">say something</string>
+    <string name="speech_not_supported">Sorry</string>
+</resources>
