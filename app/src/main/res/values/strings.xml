@@ -6,4 +6,5 @@
     <string name="spanish">Spanish</string>
     <string name="speech_prompt">say something</string>
     <string name="speech_not_supported">Sorry</string>
+    <string name="speak">Speak</string>
 </resources>

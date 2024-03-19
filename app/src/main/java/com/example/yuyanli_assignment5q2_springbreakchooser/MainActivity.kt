@@ -14,6 +14,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -64,20 +65,53 @@ class MainActivity : AppCompatActivity() , SensorEventListener , TextToSpeech.On
         binding.chineseButton.setOnClickListener{
             setLocale("zh")
             refreshUI()
-            showSpeechInput()
+
         }
 
         binding.englishButton.setOnClickListener{
             setLocale("en")
             refreshUI()
-            showSpeechInput()
+
         }
 
         binding.spanishButton.setOnClickListener{
             setLocale("es")
             refreshUI()
-            showSpeechInput()
+
         }
+        val result = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                result->
+            Log.d("result", result.toString())
+            if (result.resultCode == Activity.RESULT_OK){
+
+                val results = result.data?.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS
+                ) as ArrayList<String>
+                Log.d("result", results[0])
+                binding.editText.setText(results[0])
+
+            }
+        }
+
+        binding.speakButton.setOnClickListener {
+            binding.editText.text = null
+            try {
+                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                intent.putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
+                intent.putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE,
+                    resources.configuration.locale.language
+                )
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"Say something")
+                result.launch(intent)
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+        }
+
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
@@ -129,25 +163,7 @@ class MainActivity : AppCompatActivity() , SensorEventListener , TextToSpeech.On
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Log.d("onActivityResult", "onActivityResult")
-        when (requestCode) {
-            SPEECH_REQUEST_CODE -> {
-                Log.d("onActivityResult", SPEECH_REQUEST_CODE.toString())
-                if (resultCode == Activity.RESULT_OK && null != data) {
-                    val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
 
-                    val recognizedText = result?.get(0) // Get the first match
-
-                    // Set the recognized text to your EditText
-                    Log.d("recognizedText", recognizedText.toString())
-                    binding.editText.setText(recognizedText)
-
-                }
-            }
-        }
-    }
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
@@ -220,21 +236,5 @@ class MainActivity : AppCompatActivity() , SensorEventListener , TextToSpeech.On
         finish()
         startActivity(intent)
     }
-    private fun showSpeechInput() {
-        Log.d("showSpeechInput", "showSpeechInput")
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            // Use the current locale as default
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-            putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt))
-        }
-        try {
-            startActivityForResult(intent, SPEECH_REQUEST_CODE)
-            Log.d("showSpeechInput", "startActivityForResult")
-        } catch (a: Exception) {
-            Toast.makeText(applicationContext, getString(R.string.speech_not_supported), Toast.LENGTH_SHORT).show()
-        }
-    }
-
 
 }

@@ -7,5 +7,6 @@
     <string name="spanish">西班牙</string>
     <string name="speech_prompt">say something</string>
     <string name="speech_not_supported">Sorry</string>
+    <string name="speak">说话</string>
 
 </resources>

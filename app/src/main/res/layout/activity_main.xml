@@ -9,7 +9,12 @@
     android:gravity="center"
     tools:context=".MainActivity">
 
-
+    <Button
+        android:id="@+id/speakButton"
+        android:layout_width="100dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/speak" />
     <EditText
         android:id="@+id/editText"
         android:layout_width="wrap_content"
